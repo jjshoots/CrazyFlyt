@@ -1,7 +1,6 @@
 # CrazyFlyt
 
-****
-****
+# This library very much in the developmental stage
 
 ## Non-Gymnasium examples
 
