@@ -33,8 +33,8 @@ class DroneController:
             cflib.crtp.init_drivers()
             self.scf = SyncCrazyflie(URI, cf=Crazyflie(rw_cache="./cache"))
             self.scf.open_link()
-        except:
-            print(f"Failed to open link with Flier on {URI}")
+        except Exception as e:
+            print(f"Failed to open link with Flier on {URI}, {e}.")
 
         # update the onboard PIDs
         self.param_set("posCtlPid", "xKp", 1.2)

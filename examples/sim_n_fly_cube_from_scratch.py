@@ -3,10 +3,9 @@ import math
 import os
 from signal import SIGINT, signal
 
-import matplotlib.pyplot as plt
 import numpy as np
 
-from PyFlyt.crazyflie import Simulator, SwarmController
+from CrazyFlyt import Simulator, SwarmController
 
 global DIM_DRONES
 DIM_DRONES = 3
@@ -119,7 +118,7 @@ if __name__ == "__main__":
         exit()
 
     # offsets for cube
-    cube_offset = np.array([[0.0, 0.0, 1.0]])
+    cube_offset = np.array([[0.0, 0.0, 2.0]])
     rotation_radius = np.array([[0.3, 0.0, 0.15]])
 
     # form the cube coordinates

@@ -4,7 +4,6 @@ import os
 from signal import SIGINT, signal
 
 import numpy as np
-
 from PyFlyt.crazyflie import Simulator, SwarmController
 
 

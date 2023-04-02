@@ -2,7 +2,6 @@ import os
 from signal import SIGINT, signal
 
 import numpy as np
-
 from PyFlyt.crazyflie import DroneController
 
 
@@ -26,7 +25,7 @@ if __name__ == "__main__":
     UAV.set_setpoint(np.array([0.0, 0.0, 0.5, 0.0]))
     UAV.sleep(5)
 
-    # send the drone back doen
+    # send the drone back down
     UAV.set_setpoint(np.array([0.0, 0.0, 0.0, 0.0]))
     UAV.sleep(5)
 

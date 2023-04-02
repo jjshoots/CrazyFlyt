@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "CrazyFlyt"
+version = "0.0.1"
+authors = [
+  { name="Jet", email="taijunjet@hotmail.com" },
+]
+description = "Crazyflie UAV simulation based on the PyFlyt library"
+readme = "readme.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["wheel", "gymnasium", "numpy", "pybullet", "cflib", "cfclient", "pyflyt"]
+keywords = ["Crazyflie", "UAVs", "drones", "Quadcopter"]
+license = { file="./LICENSE.txt" }
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["CrazyFlyt", "CrazyFlyt.*"]
+
+[project.urls]
+Repository = "https://github.com/jjshoots/CrazyFlyt"
+"Bug Report" = "https://github.com/jjshoots/CrazyFlyt/issues"
+
+#######################################################################################
+# linters
+#######################################################################################
+[tool.pyright]
+reportMissingImports = "none"

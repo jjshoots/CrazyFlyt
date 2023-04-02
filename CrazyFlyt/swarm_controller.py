@@ -11,7 +11,7 @@ class SwarmController:
     """
     Class for controlling a swarm of Crazyflie UAVs.
     Realistically, only about 5 drones per dongle supported.
-        Requied: URIs
+        Required: URIs
         - correspond to list of URIs for the drones.
         Optional: start_pos and start_orn
         - correspond to desired initial positions of drones
