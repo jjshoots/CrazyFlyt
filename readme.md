@@ -4,12 +4,10 @@
 
 ## Non-Gymnasium examples
 
-If you're not interested in RL but want to use the library for your own research, we provide a bunch of example code in `examples/` that you can run with `python3 examples/***.py` in _macOS_ and _Linux_.
+This is a library for flying real CrazyFlie 2.x drones with support for a simulation environment via the [PyFlyt](https://github.com/jjshoots/PyFlyt) library.
+Example scripts are provided under `examples/***.py`.
 
-PyFlyt also has naive support for flying real Crazyflie drones.
-These examples are provided under `examples/crazyflie/***.py`.
 The library is built using CrazyFlie drones, check out the [documentation](https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/).
-These scripts are built with as little dependencies as possible, but enable interfacing with real (using the CrazyPA module) or virtual drones easy.
 
 ### Simulation Only
 

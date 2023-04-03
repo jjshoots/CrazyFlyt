@@ -16,7 +16,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["wheel", "gymnasium", "numpy", "pybullet", "cflib", "cfclient", "pyflyt"]
+dependencies = ["numpy", "cflib", "cfclient", "pyflyt"]
 keywords = ["Crazyflie", "UAVs", "drones", "Quadcopter"]
 license = { file="./LICENSE.txt" }
 
