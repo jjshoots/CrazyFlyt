@@ -1,13 +1,19 @@
+"""Simulates 27 CrazyFlie drones flying in a rotating cube."""
 import math
 import os
 from signal import SIGINT, signal
 
-import matplotlib.pyplot as plt
 import numpy as np
-from PyFlyt.crazyflie import Simulator
+
+from CrazyFlyt import Simulator
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 
@@ -55,4 +61,4 @@ if __name__ == "__main__":
 
         # send the setpoints and step
         swarm.set_setpoints(setpoints)
-        swarm.step()
+        swarm.sleep()

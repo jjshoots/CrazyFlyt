@@ -1,11 +1,18 @@
+"""Initializes a single Crazyflie drone, makes it hover to 0.5 meters for 5 seconds, and lands."""
 import os
 from signal import SIGINT, signal
 
 import numpy as np
-from PyFlyt.crazyflie import DroneController
+
+from CrazyFlyt import DroneController
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 

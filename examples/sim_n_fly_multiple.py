@@ -1,18 +1,28 @@
+"""Controls 4 CrazyFlie drones hovering, can be done in either simulation or reality."""
 import argparse
 import os
 from signal import SIGINT, signal
 
 import numpy as np
-from PyFlyt.crazyflie import Simulator, SwarmController
+
+from CrazyFlyt import Simulator, SwarmController
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description="Fly a single Crazyflie in a circle.")
+    """get_args."""
+    parser = argparse.ArgumentParser(
+        description="Controls 4 Crazyflie drones to hover."
+    )
 
     parser.add_argument(
         "--simulate",
@@ -20,7 +30,7 @@ def get_args():
         nargs="?",
         const=True,
         default=False,
-        help="Simulate the circle.",
+        help="Use simulation.",
     )
 
     parser.add_argument(
@@ -29,13 +39,14 @@ def get_args():
         nargs="?",
         const=True,
         default=False,
-        help="Run the circle on an actual drone.",
+        help="Run on actual drones.",
     )
 
     return parser.parse_args()
 
 
 def fake_handler():
+    """fake_handler."""
     start_pos = np.array(
         [[0.0, -1.0, 0.05], [0.0, 1.0, 0.05], [-1.0, 0.0, 0.05], [1.0, 0.0, 0.05]]
     )
@@ -51,6 +62,7 @@ def fake_handler():
 
 
 def real_handler():
+    """real_handler."""
     URIs = []
     URIs.append("radio://0/10/2M/E7E7E7E7E2")
     URIs.append("radio://0/10/2M/E7E7E7E7E7")
@@ -87,7 +99,7 @@ if __name__ == "__main__":
         exit()
 
     # arm all drones
-    UAVs.arm([1] * UAVs.num_drones)
+    UAVs.arm([True] * UAVs.num_drones)
 
     # initial hover
     UAVs.set_setpoints(
@@ -116,7 +128,7 @@ if __name__ == "__main__":
     UAVs.sleep(5)
 
     # stop the drone flight controller
-    UAVs.arm([0] * UAVs.num_drones)
+    UAVs.arm([False] * UAVs.num_drones)
     UAVs.sleep(5)
 
     # end the drone control

@@ -1,3 +1,4 @@
+"""Virtual version of the swarm_controller or drone_controller code."""
 import copy
 import os
 import time
@@ -8,17 +9,24 @@ from scipy.optimize import linear_sum_assignment
 
 
 class Simulator:
-    """
-    This is a virtual version of the swarm_controller or drone_controller code.
+    """Simulator.
+
+    Virtual version of the swarm_controller or drone_controller code.
     Intended to be used to visualize how the real drones will fly.
 
     Control is done using linear velocity setpoints and yawrate:
         vx, vy, vz, vr
-    States is full linear position and yaw
+    States is full linear position and yaw:
         x, y, z, r
     """
 
-    def __init__(self, start_pos, start_orn):
+    def __init__(self, start_pos: np.ndarray, start_orn: np.ndarray):
+        """__init__.
+
+        Args:
+            start_pos (np.ndarray): (n, 3) array of starting positions for the drones to be spawned in
+            start_orn (np.ndarray): (n, 3) array of starting orientations for the drones to be spawned in
+        """
         # we use a custom drone that is accurate to the real model
         drone_options = dict()
         drone_options["model_dir"] = os.path.join(
@@ -41,8 +49,11 @@ class Simulator:
         self.steps = 0
 
     def reshuffle(self, new_pos, new_orn):
-        """
-        reshuffle the drones given a new start_pos such that all drones map to the new start_pos cleanly
+        """reshuffle.
+
+        Args:
+            new_pos (np.ndarray): (n, 4) array for the target position to assign to all the drones
+            new_orn (np.ndarray): (n, 4) array for the target orientation to assign to all the drones
         """
         # if start pos is given, reassign to get drones to their positions automatically
         assert (
@@ -76,8 +87,10 @@ class Simulator:
         return cost
 
     def set_setpoints(self, setpoints: np.ndarray):
-        """
-        setpoints is a num_drones x 4 array, where the 4 corresponds to x, y, z, r or vx, vy, vz, vr
+        """set_setpoints.
+
+        Args:
+            setpoints (np.ndarray): (n, 4) array for setpoint corresponding to (x, y, z, yaw) or (vx, vy, vz, vyaw)
         """
         # the setpoints in the digital twin has the last two dims flipped
         temp = copy.deepcopy(setpoints[:, -2])
@@ -85,15 +98,16 @@ class Simulator:
         setpoints[:, -1] = temp
         self.env.set_all_setpoints(setpoints)
 
-    def step(self):
-        self.steps += 1
-        self.env.step()
+    def set_pos_control(self, setting: bool):
+        """set_pos_control.
 
-    def set_pos_control(self, setting):
-        """sets entire swarm to fly using pos control"""
+        Args:
+            setting (bool): whether to set all drones to pos control
+        """
         self.env.set_mode(7 if setting else 6)
 
     def get_states(self):
+        """get_states."""
         raw_states = np.array(self.env.all_states)
         states = np.zeros((self.num_drones, 4))
         states[:, :-1] = copy.deepcopy(raw_states[:, -1, :])
@@ -101,26 +115,43 @@ class Simulator:
 
         return states
 
-    def sleep(self, seconds: float):
-        for _ in range(int(seconds / self.env.update_period)):
-            self.step()
+    def sleep(self, seconds: float | None = None):
+        """sleep.
 
-    def arm(self, settings):
+        Args:
+            seconds (float | None): seconds
+        """
+        num_steps = 1 if seconds is None else int(seconds / self.env.update_period)
+
+        for _ in range(num_steps):
+            self.steps += 1
+            self.env.step()
+
+    def arm(self, settings: list[bool]):
+        """arm.
+
+        Args:
+            settings (list[bool]): setting for arming all drones in the simulation
+        """
         self.env.set_armed(settings)
 
     def end(self):
+        """end."""
         self.arm([0] * self.num_drones)
         time.sleep(3)
         exit()
 
     @property
     def states(self):
+        """states."""
         return self.get_states()
 
     @property
     def num_drones(self):
+        """num_drones."""
         return self.env.num_drones
 
     @property
     def elapsed_time(self):
+        """elapsed_time."""
         return self.env.physics_period * self.steps

@@ -1,11 +1,18 @@
+"""Simulates a single CrazyFlie drone."""
 import os
 from signal import SIGINT, signal
 
 import numpy as np
-from PyFlyt.crazyflie import Simulator
+
+from CrazyFlyt import Simulator
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 
@@ -18,7 +25,7 @@ if __name__ == "__main__":
     start_orn = np.array([[0.0, 0.0, 0.0]])
     env = Simulator(start_pos=start_pos, start_orn=start_orn)
     env.set_pos_control(True)
-    env.arm([1])
+    env.arm([True])
 
     # fly in a box like pattern, allowing 5 seconds between each setpoint
     env.set_setpoints(np.array([[0.0, 0.0, 1.0, 1.0]]))
@@ -31,4 +38,4 @@ if __name__ == "__main__":
     env.sleep(5)
     env.set_setpoints(np.array([[0.0, 0.0, 1.0, 1.0]]))
     env.sleep(5)
-    env.arm([0])
+    env.arm([False])

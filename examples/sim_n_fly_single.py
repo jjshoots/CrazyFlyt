@@ -1,19 +1,27 @@
+"""Hovers one CrazyFlie drone, can be done in either simulation or reality."""
 import argparse
 import math
 import os
 from signal import SIGINT, signal
 
 import numpy as np
-from PyFlyt.crazyflie import Simulator, SwarmController
+
+from CrazyFlyt import Simulator, SwarmController
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description="Fly a single Crazyflie in a circle.")
+    """get_args."""
+    parser = argparse.ArgumentParser(description="Hovers a single CrazyFlie drone.")
 
     parser.add_argument(
         "--simulate",
@@ -21,7 +29,7 @@ def get_args():
         nargs="?",
         const=True,
         default=False,
-        help="Simulate the circle.",
+        help="Use simulation.",
     )
 
     parser.add_argument(
@@ -30,13 +38,14 @@ def get_args():
         nargs="?",
         const=True,
         default=False,
-        help="Run the circle on an actual drone.",
+        help="Run on actual drones.",
     )
 
     return parser.parse_args()
 
 
 def fake_handler():
+    """fake_handler."""
     start_pos = np.array([[0.0, 0.0, 0.05]])
     start_orn = np.array([[0.0, 0.0, 0.0]])
 
@@ -48,6 +57,7 @@ def fake_handler():
 
 
 def real_handler():
+    """real_handler."""
     URIs = []
     URIs.append("radio://0/10/2M/E7E7E7E7E2")
 
@@ -72,7 +82,7 @@ if __name__ == "__main__":
         exit()
 
     # arm all drones
-    UAVs.arm([1])
+    UAVs.arm([True])
 
     # initial hover
     UAVs.set_setpoints(np.array([[0.0, 1.0, 1.0, 0.0]]))
@@ -90,15 +100,15 @@ if __name__ == "__main__":
         UAVs.sleep(0.1)
 
     # send the drone back to origin hover
-    UAVs.set_setpoints(np.array([[0.0, 1.0, 1.0, 0]]))
+    UAVs.set_setpoints(np.array([[0.0, 1.0, 1.0, 0.0]]))
     UAVs.sleep(10)
 
     # send the drone back down
-    UAVs.set_setpoints(np.array([[0.0, 1.0, -1.0, 0]]))
+    UAVs.set_setpoints(np.array([[0.0, 1.0, -1.0, 0.0]]))
     UAVs.sleep(5)
 
     # stop the drone flight controller
-    UAVs.arm([0])
+    UAVs.arm([False])
     UAVs.sleep(5)
 
     # end the drone control

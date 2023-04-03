@@ -1,11 +1,18 @@
+"""Simulates a swarm of CrazyFlie drones."""
 import os
 from signal import SIGINT, signal
 
 import numpy as np
-from PyFlyt.crazyflie import Simulator
+
+from CrazyFlyt import Simulator
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 

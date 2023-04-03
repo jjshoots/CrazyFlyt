@@ -1,3 +1,4 @@
+"""Controls 27 CrazyFlie drones flying in a rotating cube from scratch spawn, can be done in either simulation or reality."""
 import argparse
 import math
 import os
@@ -12,12 +13,20 @@ DIM_DRONES = 3
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description="Fly a single Crazyflie in a circle.")
+    """get_args."""
+    parser = argparse.ArgumentParser(
+        description="Fly a bunch of CrazyFlie drones in a cube."
+    )
 
     parser.add_argument(
         "--simulate",
@@ -25,7 +34,7 @@ def get_args():
         nargs="?",
         const=True,
         default=False,
-        help="Simulate the circle.",
+        help="Use simulation.",
     )
 
     parser.add_argument(
@@ -34,13 +43,14 @@ def get_args():
         nargs="?",
         const=True,
         default=False,
-        help="Run the circle on an actual drone.",
+        help="Run on actual drones.",
     )
 
     return parser.parse_args()
 
 
 def fake_handler():
+    """fake_handler."""
     global DIM_DRONES
     # here we spawn drones in a circle
     theta = np.arange(0, 2 * math.pi, 2 * math.pi / (DIM_DRONES**3))
@@ -59,6 +69,7 @@ def fake_handler():
 
 
 def real_handler():
+    """real_handler."""
     URIs = []
     URIs.append("radio://0/10/2M/E7E7E7E7E7")
     URIs.append("radio://1/10/2M/E7E7E7E7E1")
@@ -76,7 +87,13 @@ def real_handler():
     return UAVs
 
 
-def get_circle(radius, height):
+def get_circle(radius: float, height: float):
+    """get_circle.
+
+    Args:
+        radius (float): radius
+        height (float): height
+    """
     global DIM_DRONES
 
     theta = np.arange(0, 2 * math.pi, 2 * math.pi / (DIM_DRONES**3))
@@ -87,12 +104,17 @@ def get_circle(radius, height):
     return np.stack((x, y, z), axis=-1)
 
 
-def get_cube(radius):
+def get_cube(length: float):
+    """get_cube.
+
+    Args:
+        length (float): length of the cube
+    """
     global DIM_DRONES
 
-    lin_range = np.array([-radius, radius])
+    lin_range = np.array([-length, length])
     lin_range = np.linspace(start=lin_range[0], stop=lin_range[1], num=DIM_DRONES)
-    height_range = np.array([-radius, radius])
+    height_range = np.array([-length, length])
     height_range = np.linspace(
         start=height_range[0], stop=height_range[1], num=DIM_DRONES
     )
@@ -149,7 +171,7 @@ if __name__ == "__main__":
 
     # reshuffle drones according to cube pos, then arm all and launch
     UAVs.reshuffle(cube + cube_offset + rotation_radius, np.zeros((UAVs.num_drones, 3)))
-    UAVs.arm([1] * UAVs.num_drones)
+    UAVs.arm([True] * UAVs.num_drones)
     UAVs.sleep(5)
 
     for i in range(1000):
@@ -166,7 +188,7 @@ if __name__ == "__main__":
 
         # step the simulation or wait some time
         if args.simulate:
-            UAVs.step()
+            UAVs.sleep(0.01)
         elif args.hardware:
             UAVs.sleep(0.01)
 
@@ -180,6 +202,6 @@ if __name__ == "__main__":
     UAVs.reshuffle(circle, np.zeros_like(circle))
     UAVs.sleep(5)
 
-    UAVs.arm([0] * UAVs.num_drones)
+    UAVs.arm([False] * UAVs.num_drones)
     UAVs.sleep(2)
     UAVs.end()

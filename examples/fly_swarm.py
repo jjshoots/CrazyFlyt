@@ -1,11 +1,18 @@
+"""Initializes a swarm of Crazyflie drones, makes them hover to 1 meter for 5 seconds, and lands all of them."""
 import os
 from signal import SIGINT, signal
 
 import numpy as np
-from PyFlyt.crazyflie import SwarmController
+
+from CrazyFlyt import SwarmController
 
 
 def shutdown_handler(*_):
+    """shutdown_handler.
+
+    Args:
+        _: args
+    """
     print("ctrl-c invoked")
     os._exit(1)
 
@@ -28,7 +35,7 @@ if __name__ == "__main__":
     # arm all drones
     swarm = SwarmController(URIs)
     # swarm.set_pos_control(True)
-    swarm.go([1] * swarm.num_drones)
+    swarm.arm([True] * swarm.num_drones)
 
     # initial position target (relative to local start positions)
     # disable pos control for velocity control
@@ -38,5 +45,5 @@ if __name__ == "__main__":
     swarm.sleep(5)
 
     # stop the swarm
-    swarm.go([0] * swarm.num_drones)
+    swarm.arm([False] * swarm.num_drones)
     swarm.end()

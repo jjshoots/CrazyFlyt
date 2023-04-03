@@ -1,3 +1,4 @@
+"""Class for controlling a swarm of Crazyflie UAVs."""
 import time
 from typing import List
 
@@ -8,29 +9,30 @@ from .drone_controller import DroneController
 
 
 class SwarmController:
-    """
+    """SwarmController.
+
     Class for controlling a swarm of Crazyflie UAVs.
-    Realistically, only about 5 drones per dongle supported.
-        Required: URIs
-        - correspond to list of URIs for the drones.
-        Optional: start_pos and start_orn
-        - correspond to desired initial positions of drones
-            don't have to worry about drone numbering,
-            assignment is solved using Hungarian algorithm.
-            Only the last value of start_orn (yaw) is used.
-            Position control automatically set if this is supplied.
     """
 
     def __init__(self, URIs: List[str]):
+        """__init__.
+
+        Args:
+            URIs (List[str]): list of URIs for the drones
+        """
         self.UAVs = [DroneController(URI, in_swarm=True) for URI in URIs]
         time.sleep(1)
         print(f"Swarm with {self.num_drones} drones ready to go...")
         time.sleep(1)
 
-    def reshuffle(self, new_pos, new_orn):
+    def reshuffle(self, new_pos: np.ndarray, new_orn: np.ndarray):
+        """reshuffle.
+
+        Args:
+            new_pos (np.ndarray): (n, 4) array for the target position to assign to all the drones
+            new_orn (np.ndarray): (n, 4) array for the target orientation to assign to all the drones
         """
-        reshuffle the drones given a new start_pos such that all drones map to the new start_pos cleanly
-        """
+        # reshuffle the drones given a new start_pos such that all drones map to the new start_pos cleanly
         assert (
             new_pos.shape == new_orn.shape
         ), "start_pos must have same shape as start_orn"
@@ -63,43 +65,58 @@ class SwarmController:
 
     @property
     def num_drones(self):
-        """number of drones in swarm"""
+        """num_drones."""
         return len(self.UAVs)
 
     @property
     def position_estimate(self):
-        """list of position estimate for each drone"""
+        """position_estimate."""
         return np.stack([UAV.position_estimate for UAV in self.UAVs], axis=0)
 
     @property
     def states(self):
+        """states."""
         return self.position_estimate
 
-    def set_pos_control(self, setting):
-        """sets entire swarm to fly using pos control"""
+    def set_pos_control(self, setting: bool):
+        """set_pos_control.
+
+        Args:
+            setting (bool): whether to set all drones to pos control
+        """
         for UAV in self.UAVs:
             UAV.set_pos_control(setting)
 
-    def arm(self, masks):
-        """arms and starts control loop for drones with masks set to 1"""
-        assert len(masks) == len(
+    def arm(self, settings: list[bool] | np.ndarray):
+        """arm.
+
+        Args:
+            settings (list[bool] | np.ndarray): (n, ) list of booleans corresponding to which drones to arm
+        """
+        assert len(settings) == len(
             self.UAVs
         ), "masks length must be equal to number of drones"
 
-        for mask, UAV in zip(masks, self.UAVs):
+        for mask, UAV in zip(settings, self.UAVs):
             if mask:
                 UAV.start()
             else:
                 UAV.stop()
 
     def end(self):
-        """disarms each drone and closes all connections"""
+        """end."""
+        # """disarms each drone and closes all connections"""
         for UAV in self.UAVs:
             UAV.end()
         time.sleep(1)
 
     def set_setpoints(self, setpoints: np.ndarray):
-        """sets setpoints for each drone, setpoints must be ndarray where len(setpoints) == len(UAVs)"""
+        """set_setpoints.
+
+        Args:
+            setpoints (np.ndarray): (n, 4) array for setpoint corresponding to (x, y, z, yaw) or (vx, vy, vz, vyaw)
+        """
+        # """sets setpoints for each drone, setpoints must be ndarray where len(setpoints) == len(UAVs)"""
         assert len(setpoints) == len(
             self.UAVs
         ), "number of setpoints must be equal to number of drones"
@@ -108,4 +125,9 @@ class SwarmController:
             UAV.set_setpoint(setpoint)
 
     def sleep(self, seconds: float):
+        """sleep.
+
+        Args:
+            seconds (float): seconds
+        """
         time.sleep(seconds)
