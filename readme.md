@@ -2,8 +2,6 @@
 
 # This library very much in the developmental stage
 
-## Non-Gymnasium examples
-
 This is a library for flying real CrazyFlie 2.x drones with support for a simulation environment via the [PyFlyt](https://github.com/jjshoots/PyFlyt) library.
 Example scripts are provided under `examples/***.py`.
 
