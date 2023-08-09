@@ -9,7 +9,7 @@ import numpy as np
 from CrazyFlyt import Simulator, SwarmController
 
 global DIM_DRONES
-DIM_DRONES = 3
+DIM_DRONES = 2
 
 
 def shutdown_handler(*_):

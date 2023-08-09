@@ -30,7 +30,7 @@ class Simulator:
         # we use a custom drone that is accurate to the real model
         drone_options = dict()
         drone_options["model_dir"] = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)), "../models/"
+            os.path.dirname(os.path.realpath(__file__)), "./models/"
         )
         drone_options["drone_model"] = "cf2x"
 

@@ -22,7 +22,7 @@ if __name__ == "__main__":
     signal(SIGINT, shutdown_handler)
 
     # the cube is made up of 3x3x3 drones
-    dim_drones = 3
+    dim_drones = 2
 
     # use meshgrid to form the coordinates for drones to form the cube
     lin_range = np.array([-0.4, 0.4])
