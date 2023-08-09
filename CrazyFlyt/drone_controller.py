@@ -153,7 +153,7 @@ class DroneController:
             name: name
             value: value
         """
-        print(f"The CrazyFliel has parameter {name} set to {value}.")
+        print(f"The CrazyFlie has parameter {name} set to {value}.")
         pass
 
     def param_set(self, groupstr, namestr, value):

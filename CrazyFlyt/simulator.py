@@ -68,7 +68,7 @@ class Simulator:
 
         # compute cost matrix
         cost = abs(
-            np.expand_dims(self.states[:, :3], axis=0) - np.expand_dims(new_pos, axis=1)
+            np.expand_dims(self.position_estimate[:, :3], axis=0) - np.expand_dims(new_pos, axis=1)
         )
         cost = np.sum(cost, axis=-1)
 
@@ -137,13 +137,12 @@ class Simulator:
 
     def end(self):
         """end."""
-        self.arm([0] * self.num_drones)
+        self.arm([False] * self.num_drones)
         time.sleep(3)
         exit()
 
     @property
-    def states(self):
-        """states."""
+    def position_estimate(self):
         return self.get_states()
 
     @property
