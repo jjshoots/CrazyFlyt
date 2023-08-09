@@ -26,6 +26,11 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["CrazyFlyt", "CrazyFlyt.*"]
 
+[tool.setuptools.package-data]
+crazyflyt = [
+    "models/**",
+]
+
 [project.urls]
 Repository = "https://github.com/jjshoots/CrazyFlyt"
 "Bug Report" = "https://github.com/jjshoots/CrazyFlyt/issues"
