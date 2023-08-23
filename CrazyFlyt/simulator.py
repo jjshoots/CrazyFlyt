@@ -48,27 +48,22 @@ class Simulator:
         # keep track of runtime
         self.steps = 0
 
-    def reshuffle(self, new_pos, new_orn):
+    def reshuffle(self, new_pos):
         """reshuffle.
 
         Args:
             new_pos (np.ndarray): (n, 4) array for the target position to assign to all the drones
-            new_orn (np.ndarray): (n, 4) array for the target orientation to assign to all the drones
         """
         # if start pos is given, reassign to get drones to their positions automatically
         assert (
-            new_pos.shape == new_orn.shape
-        ), "start_pos must have same shape as start_orn"
-        assert (
             len(new_pos) == self.num_drones
         ), "must have same number of drones as number of drones"
-        assert (
-            new_pos[0].shape[0] == 3
-        ), "start pos must have only xyz, start orn must have only pqr"
+        assert new_pos[0].shape[0] == 4, "start pos must have only xyz"
 
         # compute cost matrix
         cost = abs(
-            np.expand_dims(self.position_estimate[:, :3], axis=0) - np.expand_dims(new_pos, axis=1)
+            np.expand_dims(self.position_estimate[:, :3], axis=0)
+            - np.expand_dims(new_pos[:, :3], axis=1)
         )
         cost = np.sum(cost, axis=-1)
 
@@ -77,11 +72,8 @@ class Simulator:
         self.env.drones = [self.env.drones[i] for i in reassignment]
 
         # send setpoints
-        setpoints = np.concatenate(
-            (new_pos, np.expand_dims(new_orn[:, -1], axis=-1)), axis=-1
-        )
         self.set_pos_control(True)
-        self.set_setpoints(setpoints)
+        self.set_setpoints(new_pos)
 
         cost = np.choose(reassignment, cost.T)
         return cost

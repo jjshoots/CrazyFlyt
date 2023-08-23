@@ -25,27 +25,22 @@ class SwarmController:
         print(f"Swarm with {self.num_drones} drones ready to go...")
         time.sleep(1)
 
-    def reshuffle(self, new_pos: np.ndarray, new_orn: np.ndarray):
+    def reshuffle(self, new_pos):
         """reshuffle.
 
         Args:
             new_pos (np.ndarray): (n, 4) array for the target position to assign to all the drones
-            new_orn (np.ndarray): (n, 4) array for the target orientation to assign to all the drones
         """
-        # reshuffle the drones given a new start_pos such that all drones map to the new start_pos cleanly
-        assert (
-            new_pos.shape == new_orn.shape
-        ), "start_pos must have same shape as start_orn"
+        # if start pos is given, reassign to get drones to their positions automatically
         assert (
             len(new_pos) == self.num_drones
         ), "must have same number of drones as number of drones"
-        assert (
-            new_pos.shape[1] == 3
-        ), "start pos must have only xyz, start orn must have only pqr"
+        assert new_pos[0].shape[0] == 4, "start pos must have only xyz"
 
         # compute cost matrix
         cost = abs(
-            np.expand_dims(self.position_estimate[:, :3], axis=0) - np.expand_dims(new_pos, axis=1)
+            np.expand_dims(self.position_estimate, axis=0)
+            - np.expand_dims(new_pos[:, :3], axis=1)
         )
         cost = np.sum(cost, axis=-1)
 
@@ -54,11 +49,8 @@ class SwarmController:
         self.UAVs = [self.UAVs[i] for i in reassignment]
 
         # send setpoints
-        setpoints = np.concatenate(
-            (new_pos, np.expand_dims(new_orn[:, -1], axis=-1)), axis=-1
-        )
         self.set_pos_control(True)
-        self.set_setpoints(setpoints)
+        self.set_setpoints(new_pos)
 
         cost = np.choose(reassignment, cost.T)
         return cost

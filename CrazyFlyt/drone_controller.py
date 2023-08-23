@@ -8,7 +8,6 @@ import numpy as np
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
-
 # from cflib.positioning.motion_commander import MotionCommander
 from cflib.utils import uri_helper
 
@@ -48,10 +47,10 @@ class DroneController:
             print(f"Failed to open link with Flier on {URI}, {e}.")
 
         # update the onboard PIDs
-        self.param_set("posCtlPid", "xKp", 1.2)
-        self.param_set("posCtlPid", "yKp", 1.2)
-        self.param_set("posCtlPid", "zKp", 1.0)
-        self.param_set("posCtlPid", "zKi", 0.2)
+        # self.param_set("posCtlPid", "xKp", 1.2)
+        # self.param_set("posCtlPid", "yKp", 1.2)
+        # self.param_set("posCtlPid", "zKp", 1.0)
+        # self.param_set("posCtlPid", "zKi", 0.2)
 
         # logging thread
         self.logging_thread = LogConfig(name="Position", period_in_ms=10)
