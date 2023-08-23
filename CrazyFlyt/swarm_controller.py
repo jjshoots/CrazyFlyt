@@ -39,7 +39,7 @@ class SwarmController:
 
         # compute cost matrix
         cost = abs(
-            np.expand_dims(self.position_estimate, axis=0)
+            np.expand_dims(self.position_estimate[:, :3], axis=0)
             - np.expand_dims(new_pos[:, :3], axis=1)
         )
         cost = np.sum(cost, axis=-1)
