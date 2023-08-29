@@ -61,8 +61,10 @@ class Simulator:
         # if start pos is given, reassign to get drones to their positions automatically
         assert (
             len(new_pos) == self.num_drones
-        ), "must have same number of drones as number of drones"
-        assert new_pos[0].shape[0] == 4, "start pos must have only xyz"
+        ), f"must have same number of drones as number of drones, expected {self.num_drones} drones but got {len(new_pos)} new positions."
+        assert (
+            new_pos[0].shape[0] == 4
+        ), f"start pos must have 4 dimensions for [x, y, z, yaw], got {new_pos[0].shape[0]} dimensions."
 
         # compute cost matrix
         cost = abs(
@@ -89,10 +91,10 @@ class Simulator:
             setpoints (np.ndarray): (n, 4) array for setpoint corresponding to (x, y, z, yaw) or (vx, vy, vz, vyaw)
         """
         # the setpoints in the digital twin has the last two dims flipped
-        temp = copy.deepcopy(setpoints[:, -2])
-        setpoints[:, -2] = copy.deepcopy(setpoints[:, -1])
-        setpoints[:, -1] = temp
-        self.env.set_all_setpoints(setpoints)
+        corrected_setpoints = copy.deepcopy(setpoints)
+        corrected_setpoints[:, -2] = setpoints[:, -1]
+        corrected_setpoints[:, -1] = setpoints[:, -2]
+        self.env.set_all_setpoints(corrected_setpoints)
 
     def set_pos_control(self, setting: bool):
         """set_pos_control.

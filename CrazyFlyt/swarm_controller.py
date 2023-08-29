@@ -34,8 +34,10 @@ class SwarmController:
         # if start pos is given, reassign to get drones to their positions automatically
         assert (
             len(new_pos) == self.num_drones
-        ), "must have same number of drones as number of drones"
-        assert new_pos[0].shape[0] == 4, "start pos must have only xyz"
+        ), f"must have same number of drones as number of drones, expected {self.num_drones} drones but got {len(new_pos)} new positions."
+        assert (
+            new_pos[0].shape[0] == 4
+        ), f"start pos must have 4 dimensions for [x, y, z, yaw], got {new_pos[0].shape[0]} dimensions."
 
         # compute cost matrix
         cost = abs(
