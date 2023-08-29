@@ -91,13 +91,13 @@ class SwarmController:
                 UAV.stop()
 
     def end(self):
-        """disarms each drone and closes all connections."""
+        """Disarms each drone and closes all connections."""
         for UAV in self.UAVs:
             UAV.end()
         time.sleep(1)
 
     def set_setpoints(self, setpoints: np.ndarray):
-        """sets setpoints for each drone, setpoints must be ndarray where len(setpoints) == len(UAVs).
+        """Sets setpoints for each drone, setpoints must be ndarray where len(setpoints) == len(UAVs).
 
         Args:
             setpoints (np.ndarray): (n, 4) array for setpoint corresponding to (x, y, z, yaw) or (vx, vy, vz, vyaw)

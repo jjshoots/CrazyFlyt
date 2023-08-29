@@ -47,15 +47,17 @@ def get_args():
 
 def fake_handler():
     """fake_handler."""
-    start_pos = np.array(
-        [[0.0, -1.0, 0.05], [0.0, 1.0, 0.05], [-1.0, 0.0, 0.05], [1.0, 0.0, 0.05]]
-    )
-    start_orn = np.array(
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+    start_states = np.array(
+        [
+            [0.0, -1.0, 0.05, 0.0],
+            [0.0, 1.0, 0.05, 0.0],
+            [-1.0, 0.0, 0.05, 0.0],
+            [1.0, 0.0, 0.05, 0.0],
+        ]
     )
 
     # spawn in a drone
-    UAVs = Simulator(start_pos=start_pos, start_orn=start_orn)
+    UAVs = Simulator(start_states=start_states)
     UAVs.set_pos_control(True)
 
     return UAVs
@@ -77,10 +79,7 @@ def real_handler():
     start_pos = np.array(
         [[0.0, -1.0, 0.05], [0.0, 1.0, 0.05], [-1.0, 0.0, 0.05], [1.0, 0.0, 0.05]]
     )
-    start_orn = np.array(
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
-    )
-    UAVs.reshuffle(start_pos, start_orn)
+    UAVs.reshuffle(start_pos)
 
     return UAVs
 

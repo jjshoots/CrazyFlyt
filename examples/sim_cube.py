@@ -45,10 +45,14 @@ if __name__ == "__main__":
 
     R = Rx @ Ry @ Rz
 
+    # define the starting positions as an [n, 4] array for
+    # n drones and [x, y, z, yaw] states
+    start_states = np.concatenate((cube + offset, np.zeros((len(cube), 1))), axis=-1)
+
     # spawn the drones and go!
-    swarm = Simulator(start_pos=cube + offset, start_orn=np.zeros_like(cube))
+    swarm = Simulator(start_states=start_states)
     swarm.set_pos_control(True)
-    swarm.arm([1] * swarm.num_drones)
+    swarm.arm([True] * swarm.num_drones)
 
     for i in range(100000):
         # at each timestep, update the target positions

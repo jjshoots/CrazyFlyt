@@ -34,13 +34,13 @@ if __name__ == "__main__":
     grid_x, grid_y, grid_z = np.meshgrid(lin_range, lin_range, height_range)
     grid_x, grid_y, grid_z = grid_x.flatten(), grid_y.flatten(), grid_z.flatten()
 
-    start_pos = np.stack([grid_x, grid_y, grid_z], axis=-1)
-    start_orn = np.zeros_like(start_pos)
+    # define the starting state as an [n, 4] array for n drones
+    start_states = np.stack([grid_x, grid_y, grid_z, np.zeros_like(grid_x)], axis=-1)
 
     # spawn in the drones according to the positions and enable all of them
-    swarm = Simulator(start_pos=start_pos, start_orn=start_orn)
+    swarm = Simulator(start_states=start_states)
     swarm.set_pos_control(False)
-    swarm.arm([1] * swarm.num_drones)
+    swarm.arm([True] * swarm.num_drones)
 
     # make the drone fly in horizontal x with 1 rad/s yawrate
     setpoints = [1.0, 0.0, 0.0, 1.0]

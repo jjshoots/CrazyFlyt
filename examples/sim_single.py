@@ -21,9 +21,8 @@ if __name__ == "__main__":
     signal(SIGINT, shutdown_handler)
 
     # spawn a drone at 0, 0, 1
-    start_pos = np.array([[0.0, 0.0, 1.0]])
-    start_orn = np.array([[0.0, 0.0, 0.0]])
-    env = Simulator(start_pos=start_pos, start_orn=start_orn)
+    start_states = np.array([[0.0, 0.0, 1.0, 0.0]])
+    env = Simulator(start_states=start_states)
     env.set_pos_control(True)
     env.arm([True])
 

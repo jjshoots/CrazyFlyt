@@ -20,12 +20,11 @@ class Simulator:
         x, y, z, r
     """
 
-    def __init__(self, start_pos: np.ndarray, start_orn: np.ndarray):
+    def __init__(self, start_states: np.ndarray):
         """__init__.
 
         Args:
-            start_pos (np.ndarray): (n, 3) array of starting positions for the drones to be spawned in
-            start_orn (np.ndarray): (n, 3) array of starting orientations for the drones to be spawned in
+            start_states (np.ndarray): (n, 4) array of starting states for the drones in terms of [x, y, z, yaw]
         """
         # we use a custom drone that is accurate to the real model
         drone_options = dict()
@@ -33,6 +32,11 @@ class Simulator:
             os.path.dirname(os.path.realpath(__file__)), "./models/"
         )
         drone_options["drone_model"] = "cf2x"
+
+        # splice out the state into something that we can pass to aviary
+        start_pos = start_states[:, :3]
+        start_orn = np.zeros_like(start_pos)
+        start_orn[:, -1] = start_states[:, -1]
 
         # instantiate the digital twin
         self.env = Aviary(
@@ -135,6 +139,7 @@ class Simulator:
 
     @property
     def position_estimate(self):
+        """position_estimate."""
         return self.get_states()
 
     @property

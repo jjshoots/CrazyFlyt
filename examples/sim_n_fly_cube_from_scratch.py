@@ -58,11 +58,11 @@ def fake_handler():
     x = distance * np.cos(theta)
     y = distance * np.sin(theta)
     z = np.ones_like(x) * 0.05
-    start_pos = np.stack((x, y, z), axis=-1)
-    start_orn = np.zeros_like(start_pos)
+    yaw = np.zeros_like(x)
+    start_states = np.stack((x, y, z, yaw), axis=-1)
 
     # spawn in a drone
-    UAVs = Simulator(start_pos=start_pos, start_orn=start_orn)
+    UAVs = Simulator(start_states)
     UAVs.set_pos_control(True)
 
     return UAVs
@@ -170,7 +170,7 @@ if __name__ == "__main__":
     R2 = Rx @ Ry @ Rz
 
     # reshuffle drones according to cube pos, then arm all and launch
-    UAVs.reshuffle(cube + cube_offset + rotation_radius, np.zeros((UAVs.num_drones, 3)))
+    UAVs.reshuffle(cube + cube_offset + rotation_radius)
     UAVs.arm([True] * UAVs.num_drones)
     UAVs.sleep(5)
 
@@ -194,12 +194,12 @@ if __name__ == "__main__":
 
     # circle targets 1 meter above ground
     circle = get_circle(1.0, 1.0)
-    UAVs.reshuffle(circle, np.zeros_like(circle))
+    UAVs.reshuffle(circle)
     UAVs.sleep(5)
 
     # circle targets on the ground
     circle = get_circle(1.0, -1.0)
-    UAVs.reshuffle(circle, np.zeros_like(circle))
+    UAVs.reshuffle(circle)
     UAVs.sleep(5)
 
     UAVs.arm([False] * UAVs.num_drones)
